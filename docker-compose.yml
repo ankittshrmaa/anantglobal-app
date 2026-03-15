@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+
+  # ── PostgreSQL Database ───────────────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: anantglobal-db
+    environment:
+      POSTGRES_USER: anant_user
+      POSTGRES_PASSWORD: anant_pass
+      POSTGRES_DB: anantglobal
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U anant_user -d anantglobal"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI Backend ───────────────────────────────────────────────────────
+  backend:
+    build: ./backend
+    container_name: anantglobal-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://anant_user:anant_pass@db:5432/anantglobal
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Flutter Web Frontend ──────────────────────────────────────────────────
+  frontend:
+    build: ./app
+    container_name: anantglobal-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+# ── Volumes ───────────────────────────────────────────────────────────────
+volumes:
+  pg-data:

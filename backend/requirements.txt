@@ -1,0 +1,23 @@
+fastapi==0.135.1
+uvicorn==0.41.0
+sqlalchemy==2.0.48
+passlib==1.7.4
+bcrypt==4.0.1
+python-multipart==0.0.9
+psycopg2-binary==2.9.9
+
+# To run the backend server, use the following command:
+# python3 -m uvicorn main:app --reload --host 172.23.171.153 --port 8000
+
+
+# To run the Flutter web app, use the following command:
+# flutter run -d web-server --web-port 3000 --web-hostname 172.23.171.153
+
+# Note: Make sure to replace ' IP_ADDRESS' with your actual WSL IP address in both commands.
+
+
+# DB 
+# # sudo -u postgres psql -d anantglobal
+# SELECT id, name, mobile, is_verified, created_at FROM users;
+
+# SELECT * FROM otp_records;
